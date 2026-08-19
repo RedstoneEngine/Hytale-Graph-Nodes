@@ -15,25 +15,44 @@ FYI, there are rough edges everywhere as this took a lot of work, debugging, and
 
 
 Side Hytale Fixes:
+
 -Prefabs don't load on graphs correctly due to race conditions
+
 Big Issues:
+
 -I think the read/write bounds of rotated props is what's currently cutting off props
+
   (Could increase space in base prefabprop but performance would go up for all props...)
+
 Issues:
+
 -PrefabNode doesnt work in graph editor
+
   (May have to make custom prefab node for connection type or try and parse to first prop reference)
+
 -Too many prefab reads on build()
+
   (Was stored at json/variable load but the graphnode block ID wasn't present yet occasionally. Marking dirty also didn't work)
+
 -All prefabs need to face 1 direction
+
   (Current fix is manual rotation, future would be setting the rotation on the content)
+
 -General code cleanup everywhere
+
 ToDo:
+
 -GraphNode blocks will need to disappear on placement like editor_empty
+
 -Need to add a way to set/get the graphNode block contentIds
+
 -Actually make a texture for graphNode blocks
+
 -Content Copy will also need to check if the content should spawn nodes
 
 
 Future issues that aren't solved:
+
 -Doesnt solve solvers where dead ends can occur (Jigsaws have the same issues, however the mc stronghold always generates a beginning and end)
+
 -Prefabs can intersect (Could be solved by storing prefab bounds within the graph and checking when spawning a prefab but whoof... Thatd be a lot of work and patching. Would be even more if it checks a prefab pool of what can fit which I think is what Minecraft does)
