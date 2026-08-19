@@ -34,7 +34,7 @@ hytaleTools {
     patchline = property("patchline").toString()
     injectServerJavadocsIntoSources = property("injectServerJavadocsIntoSources").toString().toBoolean()
     generateAssetsBinary = property("generateAssetsBinary").toString().toBoolean()
-    // hytaleHomeOverride = property("hytaleHomeOverride").toString()
+    hytaleHomeOverride = property("hytaleHomeOverride").toString()
 }
 
 repositories {
@@ -44,6 +44,12 @@ repositories {
 tasks.named<Jar>("jar") {
     archiveBaseName.set(project.property("mod_name").toString())
     archiveVersion.set(project.property("version").toString())
+}
+
+dependencies {
+    implementation("curse.maven:hyxin-1405491:7399430")
+    //compileOnly(files("libs/MixinTale-API-2.0.0.jar"))
+    //annotationProcessor(files("libs/MixinTale-Processor-2.0.0.jar"))
 }
 
 // Uncomment if you are using IntelliJ.

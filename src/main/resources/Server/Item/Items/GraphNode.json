@@ -1,0 +1,65 @@
+{
+  "TranslationProperties": {
+    "Name": "Graph Node"
+  },
+  "ItemLevel": 15,
+  "PlayerAnimationsId": "Block",
+  "BlockType": {
+    "Material": "Empty",
+    "DrawType": "Cube",
+    "VariantRotation": "NESW",
+    "Supporting": {
+      "Down": [
+        {}
+      ],
+      "Up": [
+        {}
+      ]
+    },
+    "IgnoreSupportWhenPlaced": true,
+    "Opacity": "Transparent",
+    "CubeShadingMode": "Flat",
+    "Textures": [
+      {
+        "All": "BlockTextures/Editor_Empty.png",
+        "Up": "Items/CreativeTools/EditorTool_Textures/Cover.png"
+      }
+    ],
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "OpenCustomUI",
+            "Page": {
+              "Id": "PrefabSpawner"
+            }
+          }
+        ]
+      }
+    },
+    "BlockEntity": {
+      "Components": {
+        "GraphNodeBlock": {}
+      }
+    },
+    "RequiresAlphaBlending": true
+  },
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -13.5
+    ]
+  },
+  "Categories": [
+    "Tool.PrefabEditing"
+  ],
+  "SubCategory": "PrefabBlocks",
+  "Quality": "Technical",
+  "Icon": "Icons/ItemsGenerated/Editor_Empty.png"
+}

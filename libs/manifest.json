@@ -1,0 +1,9 @@
+{
+  "Name": "MixinTale Developer Tools",
+  "Version": "2.0.0",
+  "Description": "MixinTale developer tools (API + annotation processor). Generates mixintale.index.json at compile time. Not a mod.",
+  "ServerVersion": "*",
+  "Authors": [
+    { "Name": "Traktool" }
+  ]
+}

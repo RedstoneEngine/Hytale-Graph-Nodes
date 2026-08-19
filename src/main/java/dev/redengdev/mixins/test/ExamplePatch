@@ -1,0 +1,18 @@
+package dev.redengdev.mixins;
+
+import java.util.logging.Level;
+
+import com.hypixel.hytale.logger.HytaleLogger;
+import com.traktool.mixintale.api.Operation;
+import com.traktool.mixintale.api.Patch;
+import com.traktool.mixintale.api.WrapCall;
+
+@Patch(targetClass = "com/hypixel/hytale/server/core/HytaleServer")
+public class ExamplePatch {
+
+    @WrapCall(targetMethod = "<init>", targetDesc = "()V", owner = "Lcom/hypixel/hytale/plugin/early/EarlyPluginLoader", name = "hasTransformers", desc = "()Z")
+    private static boolean onMain(Operation<Boolean> original) throws Throwable {
+        HytaleLogger.get("MixinTale").at(Level.INFO).log("Hello from MixinTale! The server has been patched!");
+        return original.call();
+    }
+}

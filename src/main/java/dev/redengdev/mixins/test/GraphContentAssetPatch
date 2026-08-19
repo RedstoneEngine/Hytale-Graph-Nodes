@@ -1,0 +1,91 @@
+package dev.redengdev.mixins;
+
+import java.util.logging.Level;
+
+import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
+import com.hypixel.hytale.builtin.hytalegenerator.LoggerUtil;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.DensityContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.GraphContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.MaterialContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.PositionsContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.PropDistributionContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.props.prefabprop.PrefabPropAsset;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
+import com.hypixel.hytale.logger.HytaleLogger;
+import com.traktool.mixintale.api.Accessor;
+import com.traktool.mixintale.api.Patch;
+import com.traktool.mixintale.api.Replace;
+import com.traktool.mixintale.api.This;
+
+import dev.redengdev.GraphNodes;
+
+@Patch(targetClass = "com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset")
+public abstract class GraphContentAssetPatch implements GraphContentAssetAccessor {  
+
+    //Custom Variables
+    PrefabPropAsset prefabProp = new PrefabPropAsset();
+
+    @Override
+    public PrefabPropAsset getPrefabPropAsset() {
+        return prefabProp;
+    }
+
+    @Override
+    public void setPrefabPropAsset(PrefabPropAsset prefabPropAsset) {
+        prefabProp = prefabPropAsset;        
+    }
+
+    @Accessor("CODEC")
+    static public AssetBuilderCodec<String, GraphContentAsset> getCODEC() {
+        HytaleLogger.get("MixinTale").at(Level.INFO).log("CODEC ACCESSED");
+        return CODEC;
+    }
+
+    @Accessor("CODEC")
+    static public void setCODEC(AssetBuilderCodec<String, GraphContentAsset> CODEC) {
+        GraphContentAssetPatch.CODEC = CODEC;
+        HytaleLogger.get("MixinTale").at(Level.INFO).log("CODEC SET");
+    }
+
+    static AssetBuilderCodec<String, GraphContentAsset> CODEC;
+
+    //Add Custom Variables to CODEC
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Replace(targetMethod = "<clinit>", targetDesc = "()V")
+    private static void staticMethodModified(@This GraphContentAsset self) {
+        GraphContentAssetAccessor.setCODEC(
+            (AssetBuilderCodec<String, GraphContentAsset>)AssetBuilderCodec.builder(GraphContentAsset.class, GraphContentAsset::new, Codec.STRING,
+                (asset, value) -> ((GraphContentAssetAccessor)asset).setId(value), (asset) -> ((GraphContentAssetAccessor)asset).getId(),
+                (asset, value) -> ((GraphContentAssetAccessor)asset).setData(value), (asset) -> ((GraphContentAssetAccessor)asset).getData())
+            .append(new KeyedCodec<>("ExportName", Codec.STRING, true), (asset, value) -> ((GraphContentAssetAccessor)asset).setExportName(value), (asset) -> ((GraphContentAssetAccessor)asset).getExportName())
+            .add()
+            .append(new KeyedCodec<>("ImportName", Codec.STRING, true), (asset, value) -> ((GraphContentAssetAccessor)asset).setImportName(value), (asset) -> ((GraphContentAssetAccessor)asset).getImportName())
+            .add()
+            .<DensityContentAsset[]>append(new KeyedCodec<>("DensityContent", new ArrayCodec(DensityContentAsset.CODEC, (x$0) -> new DensityContentAsset[x$0]), true), (asset, value) -> ((GraphContentAssetAccessor)asset).setDensityContentAsset(value), (asset) -> ((GraphContentAssetAccessor)asset).getDensityContentAsset())
+            .add()
+            .<MaterialContentAsset[]>append(new KeyedCodec<>("MaterialContent", new ArrayCodec(MaterialContentAsset.CODEC, (x$0) -> new MaterialContentAsset[x$0]), true), (asset, value) -> ((GraphContentAssetAccessor)asset).setMaterialContentAsset((MaterialContentAsset[])value), (asset) -> ((GraphContentAssetAccessor)asset).getMaterialContentAsset())
+            .add()
+            .<PropDistributionContentAsset[]>append(new KeyedCodec<>("PropDistributionContent", new ArrayCodec(PropDistributionContentAsset.CODEC, (x$0) -> new PropDistributionContentAsset[x$0]), true), (asset, value) -> ((GraphContentAssetAccessor)asset).setPropDistributionContentAsset((PropDistributionContentAsset[])value), (asset) -> ((GraphContentAssetAccessor)asset).getPropDistributionContentAsset())
+            .add()
+            .<PositionsContentAsset[]>append(new KeyedCodec<>("PositionsContent", new ArrayCodec(PositionsContentAsset.CODEC, (x$0) -> new PositionsContentAsset[x$0]), true), (asset, value) -> ((GraphContentAssetAccessor)asset).setPositionsContentAsset((PositionsContentAsset[])value), (asset) -> ((GraphContentAssetAccessor)asset).getPositionsContentAsset())
+            .add()
+            .<String[]>append(new KeyedCodec<>("ContentTags", new ArrayCodec(Codec.STRING, (x$0) -> new String[x$0]), true), (asset, value) -> ((GraphContentAssetAccessor)asset).setTags((String[])value), (asset) -> ((GraphContentAssetAccessor)asset).getTags())
+            .add()
+            .append(new KeyedCodec<>("PropNodes", PrefabPropAsset.CODEC), (asset, value) -> ((GraphContentAssetAccessor)asset).setPrefabPropAsset((PrefabPropAsset)value), (asset) -> ((GraphContentAssetAccessor)asset).getPrefabPropAsset())
+            .add()
+            .afterDecode((asset) -> {
+                if (!((GraphContentAssetAccessor)asset).getExportName().isEmpty()) {
+                    if (((GraphContentAssetAccessor)self).getExportedNodes().containsKey(((GraphContentAssetAccessor)asset).getExportName())) {
+                        LoggerUtil.getLogger().warning("Duplicate export name for asset: " + ((GraphContentAssetAccessor)asset).getExportName());
+                    }
+                    ((GraphContentAssetAccessor)self).getExportedNodes().put(((GraphContentAssetAccessor)asset).getExportName(), (GraphContentAsset)asset);
+                    LoggerUtil.getLogger().fine("Registered imported GraphContent asset with name '" + ((GraphContentAssetAccessor)asset).getExportName() + "' with asset id '" + ((GraphContentAssetAccessor)asset).getId());
+                }
+            })
+            .build());
+        GraphNodes.LOGGER.atInfo().log("TESTING TEST TEST " + GraphContentAssetAccessor.getCODEC().toString());
+        HytaleLogger.get("MixinTale").at(Level.INFO).log("Hello from MixinTale! The intializer has been patched!");
+    }    
+}

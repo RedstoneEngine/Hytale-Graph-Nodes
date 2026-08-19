@@ -1,0 +1,83 @@
+package dev.redengdev.mixins;
+
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.hypixel.hytale.assetstore.AssetExtraInfo;
+import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
+import com.hypixel.hytale.builtin.hytalegenerator.LoggerUtil;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.DensityContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.GraphContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.MaterialContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.PositionsContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.PropDistributionContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.props.prefabprop.PrefabPropAsset;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
+import com.hypixel.hytale.logger.HytaleLogger;
+
+@Mixin(GraphContentAsset.class)
+public abstract class GraphContentAssetMixin {
+
+    //Previous variables
+    @Shadow private static Map<String, GraphContentAsset> exportedNodes;
+    @Shadow private static AssetBuilderCodec<String, GraphContentAsset> CODEC;
+    @Shadow private String id;
+    @Shadow private AssetExtraInfo.Data data;
+    @Shadow private String exportName;
+    @Shadow private String importName;
+    @Shadow private DensityContentAsset[] densityContentAssets;
+    @Shadow private MaterialContentAsset[] materialContentAssets;
+    @Shadow private PropDistributionContentAsset[] propDistributionContentAssets;
+    @Shadow private PositionsContentAsset[] positionsContentAssets;
+    @Shadow private String[] tags;
+
+    //Custom Variables
+    PrefabPropAsset prefabProp = new PrefabPropAsset();
+
+    private static GraphContentAssetMixin cast(Object asset) {
+        return (GraphContentAssetMixin) asset;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Inject(method = "<clinit>", at = @At("TAIL"))
+    private static void onClassInit(CallbackInfo ci) {
+        CODEC = (AssetBuilderCodec<String, GraphContentAsset>)AssetBuilderCodec.builder(GraphContentAsset.class, GraphContentAsset::new, Codec.STRING,
+            (asset, value) -> cast(asset).id = value, (asset) -> cast(asset).id,
+            (asset, value) -> cast(asset).data = value, (asset) -> cast(asset).data)
+        .append(new KeyedCodec<>("ExportName", Codec.STRING, true), (asset, value) -> cast(asset).exportName = value, (asset) -> cast(asset).exportName)
+        .add()
+        .append(new KeyedCodec<>("ImportName", Codec.STRING, true), (asset, value) -> cast(asset).importName = value, (asset) -> cast(asset).importName)
+        .add()
+        .<DensityContentAsset[]>append(new KeyedCodec<>("DensityContent", new ArrayCodec(DensityContentAsset.CODEC, (x$0) -> new DensityContentAsset[x$0]), true), (asset, value) -> cast(asset).densityContentAssets = value, (asset) -> cast(asset).densityContentAssets)
+        .add()
+        .<MaterialContentAsset[]>append(new KeyedCodec<>("MaterialContent", new ArrayCodec(MaterialContentAsset.CODEC, (x$0) -> new MaterialContentAsset[x$0]), true), (asset, value) -> cast(asset).materialContentAssets = (MaterialContentAsset[])value, (asset) -> cast(asset).materialContentAssets)
+        .add()
+        .<PropDistributionContentAsset[]>append(new KeyedCodec<>("PropDistributionContent", new ArrayCodec(PropDistributionContentAsset.CODEC, (x$0) -> new PropDistributionContentAsset[x$0]), true), (asset, value) -> cast(asset).propDistributionContentAssets = (PropDistributionContentAsset[])value, (asset) -> cast(asset).propDistributionContentAssets)
+        .add()
+        .<PositionsContentAsset[]>append(new KeyedCodec<>("PositionsContent", new ArrayCodec(PositionsContentAsset.CODEC, (x$0) -> new PositionsContentAsset[x$0]), true), (asset, value) -> cast(asset).positionsContentAssets = (PositionsContentAsset[])value, (asset) -> cast(asset).positionsContentAssets)
+        .add()
+        .<String[]>append(new KeyedCodec<>("ContentTags", new ArrayCodec(Codec.STRING, (x$0) -> new String[x$0]), true), (asset, value) -> cast(asset).tags = (String[])value, (asset) -> cast(asset).tags)
+        .add()
+        .append(new KeyedCodec<>("PropNodes", PrefabPropAsset.CODEC), (asset, value) -> cast(asset).prefabProp = (PrefabPropAsset)value, (asset) -> cast(asset).prefabProp)
+        .add()
+        .afterDecode((asset) -> {
+            if (!cast(asset).exportName.isEmpty()) {
+                if (GraphContentAssetMixin.exportedNodes.containsKey(cast(asset).exportName)) {
+                    LoggerUtil.getLogger().warning("Duplicate export name for asset: " + cast(asset).exportName);
+                }
+                GraphContentAssetMixin.exportedNodes.put(cast(asset).exportName, (GraphContentAsset)asset);
+                LoggerUtil.getLogger().fine("Registered imported GraphContent asset with name '" + cast(asset).exportName + "' with asset id '" + cast(asset).id);
+            }
+        })
+        .build();
+        HytaleLogger.get("Hyxin").at(Level.INFO).log("Hello from Hyxin! The intializer has been patched!");
+    }
+}

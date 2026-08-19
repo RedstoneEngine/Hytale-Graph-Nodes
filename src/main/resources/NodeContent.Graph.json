@@ -1,0 +1,99 @@
+{
+  "Id": "NodeContent.Graph",
+  "Title": "[DEV] NodeContent",
+  "Color": "Pink",
+  "Content": [
+    {
+      "Id": "ExportName",
+      "Type": "SmallString",
+      "Options": {
+        "Label": "ExportName",
+        "Default": "",
+        "Width": 350
+      }
+    },
+    {
+      "Id": "ImportName",
+      "Type": "SmallString",
+      "Options": {
+        "Label": "ImportName",
+        "Default": "",
+        "Width": 350
+      }
+    },
+    {
+      "Id": "ContentTags",
+      "Type": "List",
+      "Options": {
+        "Label": "ContentTags",
+        "Type": "String",
+        "Width": 350
+      }
+    }
+  ],
+  "Outputs": [
+    {
+      "Id": "DensityContent",
+      "Type": "Density.NodeContent.Graph.Connection",
+      "Color": "Pink",
+      "Label": "DensityContent",
+      "Multiple": true
+    },
+    {
+      "Id": "MaterialContent",
+      "Type": "Material.NodeContent.Graph.Connection",
+      "Color": "Pink",
+      "Label": "MaterialContent",
+      "Multiple": true
+    },
+    {
+      "Id": "PropDistributionContent",
+      "Type": "PropDistribution.NodeContent.Graph.Connection",
+      "Color": "Pink",
+      "Label": "PropDistributionContent",
+      "Multiple": true
+    },
+    {
+      "Id": "PositionsContent",
+      "Type": "Positions.NodeContent.Graph.Connection",
+      "Color": "Pink",
+      "Label": "PositionsContent",
+      "Multiple": true
+    },
+    {
+      "Id": "PrefabNodes",
+      "Type": "Prop.Connection",
+      "Color": "Green",
+      "Label": "PrefabNodes",
+      "Multiple": false
+    }
+  ],
+  "Inputs": [
+    {
+      "Id": "Output",
+      "Type": "NodeContent.Graph.Connection",
+      "Color": "Pink"
+    }
+  ],
+  "Schema": {
+    "ExportName": "ExportName",
+    "ImportName": "ImportName",
+    "ContentTags": "ContentTags",
+    "DensityContent": {
+      "Node": "Density.NodeContent",
+      "Pin": "DensityContent"
+    },
+    "MaterialContent": {
+      "Node": "Material.NodeContent",
+      "Pin": "MaterialContent"
+    },
+    "PropDistributionContent": {
+      "Node": "PropDistribution.NodeContent",
+      "Pin": "PropDistributionContent"
+    },
+    "PositionsContent": {
+      "Node": "Positions.NodeContent",
+      "Pin": "PositionsContent"
+    }
+  }
+}

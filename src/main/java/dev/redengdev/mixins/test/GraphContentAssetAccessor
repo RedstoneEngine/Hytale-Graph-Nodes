@@ -1,0 +1,97 @@
+package dev.redengdev.mixins;
+
+import java.util.Map;
+
+import com.hypixel.hytale.assetstore.AssetExtraInfo;
+import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.DensityContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.GraphContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.MaterialContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.PositionsContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.graph.PropDistributionContentAsset;
+import com.hypixel.hytale.builtin.hytalegenerator.assets.props.prefabprop.PrefabPropAsset;
+import com.traktool.mixintale.api.Accessor;
+import com.traktool.mixintale.api.Patch;
+
+@Patch(targetClass = "com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset")
+public interface GraphContesntAssetAccessor {
+
+    //Custom Variables
+    PrefabPropAsset getPrefabPropAsset();
+    
+    void setPrefabPropAsset(PrefabPropAsset prefabPropAsset);
+
+    //Access Private Variables for CODEC
+
+    @Accessor("exportedNodes")
+    Map<String, GraphContentAsset> getExportedNodes();
+    
+    @Accessor("exportedNodes")
+    void setExportedNodes(Map<String, GraphContentAsset> exportedNodes);
+
+    @Accessor("CODEC")
+    static AssetBuilderCodec<String, GraphContentAsset> getCODEC()
+    {
+        return null;
+    }
+
+    @Accessor("CODEC")
+    static void setCODEC(AssetBuilderCodec<String, GraphContentAsset> CODEC)
+    {
+
+    }
+
+    @Accessor("id")
+    String getId();
+
+    @Accessor("id")
+    void setId(String id);
+
+    @Accessor("data")
+    AssetExtraInfo.Data getData();
+
+    @Accessor("data")
+    void setData(AssetExtraInfo.Data data);
+
+    @Accessor("exportName")
+    String getExportName();
+
+    @Accessor("exportName")
+    void setExportName(String exportName);
+
+    @Accessor("importName")
+    String getImportName();
+
+    @Accessor("importName")
+    void setImportName(String importName);
+
+    @Accessor("densityContentAssets")
+    DensityContentAsset[] getDensityContentAsset();
+
+    @Accessor("densityContentAssets")
+    void setDensityContentAsset(DensityContentAsset[] densityContentAssets);
+
+    @Accessor("materialContentAssets")
+    MaterialContentAsset[] getMaterialContentAsset();
+
+    @Accessor("materialContentAssets")
+    void setMaterialContentAsset(MaterialContentAsset[] materialContentAssets);
+
+    @Accessor("propDistributionContentAssets")
+    PropDistributionContentAsset[] getPropDistributionContentAsset();
+
+    @Accessor("propDistributionContentAssets")
+    void setPropDistributionContentAsset(PropDistributionContentAsset[] propDistributionContentAssets);
+
+    @Accessor("positionsContentAssets")
+    PositionsContentAsset[] getPositionsContentAsset();
+
+    @Accessor("positionsContentAssets")
+    void setPositionsContentAsset(PositionsContentAsset[] positionsContentAssets);
+
+    @Accessor("tags")
+    String[] getTags();
+
+    @Accessor("tags")
+    void setTags(String[] tags);
+}

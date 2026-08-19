@@ -1,0 +1,9 @@
+accessWidener v1 named
+
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset id Ljava/lang/String;
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset data Ljava/lang/String;
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset exportName Ljava/lang/String;
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset importName Ljava/lang/String;
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset materialContentAssets [Lcom/hypixel/hytale/builtin/hytalegenerator/assets/graph/MaterialContentAsset;
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset exportedNodes Ljava/util/Map;
+accessible field com/hypixel/hytale/builtin/hytalegenerator/assets/graph/GraphContentAsset CODEC Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
