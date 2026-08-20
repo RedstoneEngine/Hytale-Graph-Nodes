@@ -1,3 +1,5 @@
+(Requires Hyinit to run https://www.curseforge.com/hytale/bootstrap/hyinit)
+
 Meant to be a feature demo of
 
 https://docs.google.com/document/d/1vgdqgi7zafV2PliGISACmBtSrVlJZJH5G-Cj_HL5BWk/edit?tab=t.0#heading=h.1yocw5kjd2ek
